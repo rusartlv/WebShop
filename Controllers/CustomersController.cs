@@ -17,7 +17,8 @@ namespace WebShop.Controllers
         public string Email { get; set; }
         public DateTime BirthDate { get; set; }
         public Gender CustomerGender { get; set; }
-        public uint Quantity { get; set; }
+        public int Quantity { get; set; }        
+        public decimal Summary { get; set; }
 
 
     }
@@ -34,20 +35,19 @@ namespace WebShop.Controllers
         public async Task<IActionResult> Index()
         {
             return View(from c in _context.Customer
-                        join o in _context.Order
-                        on c.Id equals o.ClientId
+                        join o in _context.Order on c.Id equals o.ClientId
+                        join p in _context.Product on o.ProductId equals p.Id
+                        group new { c,o,p } by new { c.Id, c.Name, c.Email} into g
                         select new CustomerWithOrders
                         {
-                            Id = c.Id,
-                            Name = c.Name,
-                            Email = c.Email,
-                            BirthDate = c.BirthDate,
-                            CustomerGender = c.CustomerGender,
-                            Quantity = o.Quantity
-
+                            Id = g.Key.Id,
+                            Name = g.Key.Name,
+                            Email = g.Key.Email,
+                            Quantity = g.Count(),
+                            Summary = g.Sum(s => s.p.Price * s.o.Quantity)
                         }
-                           
-                          );
+
+                          ) ;
             //return View(await _context.Customer.ToListAsync());
         }
 
