@@ -21,7 +21,9 @@ namespace WebShop.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Order.ToListAsync());
+            ViewData["orders"] = _context.Order.ToList();
+            return View();
+            //return View(await _context.Order.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -77,7 +79,8 @@ namespace WebShop.Controllers
             {
                 return NotFound();
             }
-            return View(order);
+            ViewData["clients"] = _context.Customer.ToList();
+            return View();
         }
 
         // POST: Orders/Edit/5
