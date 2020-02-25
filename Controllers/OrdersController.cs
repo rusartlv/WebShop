@@ -47,6 +47,8 @@ namespace WebShop.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
+            ViewData["clients"] = _context.Customer.ToList();
+            ViewData["products"] = _context.Product.ToList();
             return View();
         }
 
@@ -63,9 +65,7 @@ namespace WebShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["clients"] = _context.Customer.ToList();
-            ViewData["products"] = _context.Product.ToList();
+           
             return View();
         }
 
