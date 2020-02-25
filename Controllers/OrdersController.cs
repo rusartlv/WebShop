@@ -63,7 +63,10 @@ namespace WebShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+
+            ViewData["clients"] = _context.Customer.ToList();
+            ViewData["products"] = _context.Product.ToList();
+            return View();
         }
 
         // GET: Orders/Edit/5
@@ -80,6 +83,7 @@ namespace WebShop.Controllers
                 return NotFound();
             }
             ViewData["clients"] = _context.Customer.ToList();
+            ViewData["products"] = _context.Product.ToList();
             return View();
         }
 
